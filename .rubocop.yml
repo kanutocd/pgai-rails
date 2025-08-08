@@ -1,0 +1,200 @@
+# RuboCop configuration for modern Ruby and Rails best practices
+# Ruby version: >= 3.2.0
+# Rails version: >= 7.1
+
+plugins:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-minitest
+
+AllCops:
+  TargetRubyVersion: 3.2
+  TargetRailsVersion: 7.1
+  NewCops: enable
+  SuggestExtensions: false
+  Exclude:
+    - 'bin/**/*'
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'log/**/*'
+    - 'coverage/**/*'
+    - 'spec/dummy/**/*'
+    - 'Gemfile'
+    - 'Gemfile.lock'
+    - '*.gemspec'
+
+# Layout and Formatting
+Layout/LineLength:
+  Max: 120
+  AllowedPatterns: ['\A\s*#.*\z'] # Allow long comments
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+# Style Guidelines
+Style/Documentation:
+  Enabled: false # Disable for now during development
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+  ConsistentQuotesInMultiline: true
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: single_quotes
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/HashSyntax:
+  EnforcedStyle: ruby19_no_mixed_keys
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/ClassAndModuleChildren:
+  Enabled: false # Allow both compact and nested styles
+
+Style/NumericLiterals:
+  MinDigits: 6
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Style/WordArray:
+  EnforcedStyle: brackets
+
+# Naming Conventions
+Naming/VariableNumber:
+  EnforcedStyle: snake_case
+
+Naming/PredicatePrefix:
+  ForbiddenPrefixes:
+    - is_
+
+# Metrics and Complexity
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'lib/tasks/**/*'
+    - 'config/**/*'
+
+Metrics/ModuleLength:
+  Max: 200
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+
+Metrics/ClassLength:
+  Max: 150
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+
+Metrics/MethodLength:
+  Max: 20
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+
+Metrics/AbcSize:
+  Max: 20
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+
+Metrics/CyclomaticComplexity:
+  Max: 8
+
+Metrics/PerceivedComplexity:
+  Max: 8
+
+# Rails-specific Rules
+Rails/ApplicationRecord:
+  Enabled: true
+
+Rails/I18nLocaleTexts:
+  Enabled: false # Not using I18n in gem
+
+Rails/SkipsModelValidations:
+  Enabled: true
+  AllowedMethods:
+    - touch
+    - update_attribute
+    - update_column
+    - update_columns
+    - update_counters
+    - increment
+    - decrement
+
+Rails/UnknownEnv:
+  Environments:
+    - development
+    - test
+    - production
+
+# Performance Rules
+Performance/CollectionLiteralInLoop:
+  Enabled: true
+
+Performance/StringReplacement:
+  Enabled: true
+
+Performance/UnfreezeString:
+  Enabled: true
+
+# Security Rules
+Security/Open:
+  Enabled: true
+
+Security/YAMLLoad:
+  Enabled: true
+
+Security/JSONLoad:
+  Enabled: true
+
+# Lint Rules
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+
+Lint/SuppressedException:
+  AllowComments: true
+
+# Bundler Rules
+Bundler/OrderedGems:
+  Enabled: false # Allow flexibility in gem ordering
+
+# Minitest-specific Rules
+Minitest/MultipleAssertions:
+  Enabled: false # Allow multiple assertions in tests
+
+Minitest/AssertTruthy:
+  Enabled: true
+
+Minitest/AssertWithExpectedArgument:
+  Enabled: true
+
+Minitest/RefuteFalse:
+  Enabled: true
+
+Minitest/RefuteNil:
+  Enabled: true
