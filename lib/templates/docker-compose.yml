@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: timescale/timescaledb-ha:pg17
+    environment:
+      POSTGRES_DB: retrieval_augmented_generation_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/home/postgres/pgdata/data
+
+  vectorizer-worker:
+    image: timescale/pgai-vectorizer-worker:latest
+    environment:
+      PGAI_VECTORIZER_WORKER_DB_URL: postgres://postgres:password@postgres:5432/retrieval_augmented_generation_development
+      OLLAMA_HOST: http://ollama:11434
+    command: ["--poll-interval", "5s"]
+    depends_on:
+      - postgres
+      - ollama
+
+  ollama:
+    image: ollama/ollama:0.10.1
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_HOST=0.0.0.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    command: >
+      sh -c "ollama serve &
+      sleep 10 &&
+      ollama pull llama3.1:8b &&
+      ollama pull nomic-embed-text &&
+      wait"
+    restart: unless-stopped
+
+    # Uncomment the following section if you have NVIDIA GPU support
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+volumes:
+  postgres_data:
+  ollama_data:
