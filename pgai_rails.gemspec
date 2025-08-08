@@ -32,7 +32,12 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "pg", "~> 1.6"
+  # Core Rails components (>= 7.1)
+  spec.add_dependency "activerecord", ">= 7.1"
+  spec.add_dependency "activesupport", ">= 7.1"
+  spec.add_dependency "railties", ">= 7.1"
+  spec.add_dependency "pg", ">= 1.0"
+  spec.add_dependency "dotenv", ">= 2.8"
 
   spec.add_development_dependency "irb", "~> 1.15"
   spec.add_development_dependency "rake", "~> 13.3"
@@ -40,9 +45,15 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop-rake", "~> 0.7.1"
   spec.add_development_dependency "yard", "~> 0.9.37"
   spec.add_development_dependency "rubocop-performance", "~> 1.25"
-  spec.add_development_dependency "minitest", "~> 5.25"
+  spec.add_development_dependency "minitest", "~> 5.0"
+  spec.add_development_dependency "minitest-reporters"
+  spec.add_development_dependency "shoulda-context"
+  spec.add_development_dependency "shoulda-matchers"
+  spec.add_development_dependency "mocha"
+  spec.add_development_dependency "database_cleaner-active_record"
   spec.add_development_dependency "rubocop-rails", "~> 2.32"
   spec.add_development_dependency "rubocop-minitest", "~> 0.38.1"
+  spec.add_development_dependency "simplecov", "~> 0.22"
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"

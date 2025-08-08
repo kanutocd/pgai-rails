@@ -10,5 +10,5 @@
 # rspec failure tracking
 .rspec_status
 /.history
-/.vscode
+/.vscode/
 /.ignoreme
