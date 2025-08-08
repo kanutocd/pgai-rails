@@ -1,0 +1,16 @@
+# frozen_string_literal: true
+
+class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Migration.current_version %>]
+  def up
+    # Create vectorizer for <%= table_name %> table
+    create_vectorizer '<%= table_name %>', name: '<%= vectorizer_name %>' do |v|
+      v.loading_column '<%= content_column %>'
+      v.embedding <%= provider_symbol %>, model: '<%= model_name %>'<% if dimensions %>, dimensions: <%= dimensions %><% end %>
+      v.chunking <%= chunking_method %>, size: <%= chunk_size %>, overlap: <%= chunk_overlap %>
+    end
+  end
+
+  def down
+    drop_vectorizer '<%= vectorizer_name %>'
+  end
+end

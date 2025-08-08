@@ -1,0 +1,46 @@
+# frozen_string_literal: true
+
+class <%= class_name %> < ApplicationRecord
+<% attributes.select(&:reference?).each do |attribute| -%>
+  belongs_to :<%= attribute.name %><%= ', polymorphic: true' if attribute.polymorphic? %><%= ', required: true' if attribute.required? %>
+<% end -%>
+<% if attributes.respond_to?(:select) -%>
+<% attributes.select { |a| a.respond_to?(:rich_type?) && a.rich_type? }.each do |attribute| -%>
+  has_rich_text :<%= attribute.name %>
+<% end -%>
+<% attributes.select { |a| a.respond_to?(:attachment?) && a.attachment? }.each do |attribute| -%>
+  has_one_attached :<%= attribute.name %>
+<% end -%>
+<% attributes.select { |a| a.respond_to?(:attachments?) && a.attachments? }.each do |attribute| -%>
+  has_many_attached :<%= attribute.name %>
+<% end -%>
+<% end -%>
+<% unless options['skip_vectorizer'] -%>
+
+  # AI-powered semantic search using pgai vectorizer
+  # 
+  # Vectorizer: <%= vectorizer_name %>
+  # Content column: <%= content_column %>
+  # Provider: <%= options['provider'] %> (<%= model_name_option %>)
+  # Dimensions: <%= dimensions || 'auto-detected' %>
+  #
+  # Usage:
+  #   <%= class_name %>.semantic_search("find posts about AI")
+  #   post.similar_records
+  
+  # TODO: Implement semantic search once vectorizer is running
+  # This is a placeholder that uses basic text search
+  scope :semantic_search, ->(query, limit: 10) do
+    where("LOWER(<%= content_column %>) LIKE LOWER(?)", "%#{query}%").limit(limit)
+  end
+
+  # Find records similar to this one based on content
+  def similar_records(limit: 5)
+    return self.class.none unless <%= content_column %>.present?
+    
+    self.class.semantic_search(<%= content_column %>, limit: limit + 1)
+               .where.not(id: id)
+               .limit(limit)
+  end
+<% end -%>
+end
