@@ -12,3 +12,4 @@
 /.history
 /.vscode/
 /.ignoreme
+.rake_tasks
